@@ -1,12 +1,8 @@
 <script lang="ts" setup>
 import { store } from '@/store';
 import { onMounted, ref, watch } from 'vue';
-import tippy from 'tippy.js';
-import type { Instance, Props } from 'tippy.js';
-import { TooltipText } from '@/constant';
 
 const reference = ref();
-let tippyDOM: Instance<Props> | undefined;
 
 const btnOn = ref();
 const btnOnCircle = ref();
@@ -14,21 +10,6 @@ const btnOnText = ref();
 
 onMounted(() => {
     onOrOff(store.autoSave);
-    watch(
-        () => store.theme,
-        () => {
-            if (tippyDOM) {
-                tippyDOM.destroy();
-            }
-            tippyDOM = tippy(reference.value, {
-                content: TooltipText.AutoSave,
-                placement: 'bottom',
-                arrow: false,
-                theme: store.theme === 'dark' ? '' : 'light',
-            }) as unknown as Instance<Props>;
-        },
-        { immediate: true }
-    );
 });
 
 function changeAutoSave() {
@@ -57,12 +38,19 @@ function onOrOff(type: boolean) {
         text.innerText = "ON";
     }
 }
+
+function save() {
+    // @ts-ignore
+    store.files[store.activeFile].code = window.editorInstance.getValue();
+    store.rerenderID++;
+}
 </script>
 
 <template>
-    <div v-if="!store.excludeTools.includes('autoSave')" ref="reference" @click="changeAutoSave" class="toolbar-icon auto-save-container">
+    <div v-if="!store.excludeTools.includes('autoSave')" ref="reference" class="toolbar-icon auto-save-container">
+        <button v-if="!store.autoSave" class="save-btn" @click="save">保存</button>
         <span class="auto-save-text">自动保存</span>
-        <p ref="btnOn" class="btn-on">
+        <p ref="btnOn" class="btn-on" @click="changeAutoSave">
             <!-- 圆点 -->
             <span ref="btnOnCircle" class="btn-on-circle"></span>
             <!-- 文字 -->
@@ -71,6 +59,15 @@ function onOrOff(type: boolean) {
     </div>
 </template>
 <style scoped lang="less">
+.save-btn {
+    border: none;
+    background-color: #12B090;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
 .auto-save-container {
     display: flex;
     align-items: center;
@@ -80,7 +77,8 @@ function onOrOff(type: boolean) {
 .auto-save-text {
     font-size: 12px;
     line-height: 20px;
-    margin-right: 5px;
+    margin: 0 8px;
+    cursor: pointer;
 }
 
 .btn-on {

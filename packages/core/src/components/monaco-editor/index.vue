@@ -164,6 +164,9 @@ onMounted(async () => {
     },
     { immediate: true }
   );
+
+  // @ts-ignore
+  window.editorInstance = editorInstance;
 });
 
 onBeforeUnmount(() => {
