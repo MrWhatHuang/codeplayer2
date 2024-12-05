@@ -8,7 +8,7 @@
     ".": {
       "import": {
         "types": "./types/index.d.ts",
-        "default": "./src/index.ts"
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./types/index.d.ts",
