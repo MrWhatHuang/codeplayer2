@@ -51,7 +51,7 @@ export const store = reactive<Store>({
   theme:
     (params.get('theme') as Theme) ||
     (localStorage.getItem(LocalThemeKey) as Theme) ||
-    'light',
+    'dark',
   reloadLanguageTools: () => {},
   document: decodeURIComponent(
     params.get('document') || ''
