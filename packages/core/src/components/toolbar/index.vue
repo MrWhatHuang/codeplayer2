@@ -4,9 +4,9 @@ import { store } from '@/store';
 import SettingIcon from './icons/setting.vue';
 import RefreshIcon from './icons/refresh.vue';
 import ShareIcon from './icons/share.vue';
-import DocsIcon from './icons/docs.vue';
 import GithubIcon from './icons/git.vue';
-
+import AutoSaveIcon from './icons/autoSave.vue';
+import LightDarkIcon from './icons/lightDark.vue';
 const showDidiver = computed(() => {
   if (
     store.excludeTools.includes('docs') &&
@@ -30,8 +30,9 @@ const showDidiver = computed(() => {
       <SettingIcon />
     </div>
     <div class="toolbar-right">
-      <DocsIcon />
-      <GithubIcon />
+      <AutoSaveIcon />
+      <LightDarkIcon />
+      <GithubIcon v-if="store.github" />
       <div class="vertical-divider" v-if="showDidiver"></div>
       <RefreshIcon />
       <ShareIcon />

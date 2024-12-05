@@ -8,6 +8,7 @@ import CodePlayer, { CodePlayerOptions } from '../../core';
 
 const options: CodePlayerOptions = {
   appType: 'vue3',
+  theme: 'dark',
 };
 </script>
 

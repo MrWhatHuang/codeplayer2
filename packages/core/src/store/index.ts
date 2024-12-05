@@ -25,6 +25,7 @@ export interface Store {
   reloadLanguageTools: () => void;
   document: string;
   github: string;
+  autoSave: boolean;
 }
 
 const params = new URLSearchParams(location.search);
@@ -53,11 +54,12 @@ export const store = reactive<Store>({
     'light',
   reloadLanguageTools: () => {},
   document: decodeURIComponent(
-    params.get('document') || 'https://play.fe-dev.cn/docs'
+    params.get('document') || ''
   ),
   github: decodeURIComponent(
-    params.get('github') || 'https://github.com/zh-lx/codeplayer'
+    params.get('github') || ''
   ),
+  autoSave: localStorage.getItem('autoSave') === 'true',
 });
 
 watch(

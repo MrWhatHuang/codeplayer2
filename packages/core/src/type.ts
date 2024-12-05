@@ -1,4 +1,4 @@
-export type Control = 'refresh' | 'copy' | 'share' | 'docs' | 'github';
+export type Control = 'refresh' | 'copy' | 'share' | 'docs' | 'github' | 'autoSave';
 
 export type AppType =
   | 'vue'
@@ -101,4 +101,9 @@ export interface CodePlayerOptions {
    * @description_zh github 地址
    */
   github?: boolean;
+  /**
+   * @description_en Whether to auto save
+   * @description_zh 是否自动保存
+   */
+  autoSave?: boolean;
 }

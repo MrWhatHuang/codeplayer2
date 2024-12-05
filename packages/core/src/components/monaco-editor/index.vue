@@ -136,7 +136,9 @@ onMounted(async () => {
   });
 
   editorInstance.onDidChangeModelContent(() => {
-    store.files[store.activeFile].code = editorInstance.getValue();
+    if (store.autoSave) {
+      store.files[store.activeFile].code = editorInstance.getValue();
+    }
   });
 
   store.reloadLanguageTools();
