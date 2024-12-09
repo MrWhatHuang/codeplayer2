@@ -40,19 +40,14 @@ function share() {
     @click="share"
     class="toolbar-icon"
   >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-    >
-      <path
-        fill="currentColor"
-        d="M10 3v2H5v14h14v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm7.586 2H13V3h8v8h-2V6.414l-7 7L10.586 12l7-7z"
-      />
-    </svg>
+  <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="M8.59 13.51l6.83 3.98"></path><path d="M15.41 6.51l-6.82 3.98"></path></g></svg>
   </div>
 </template>
 <style scoped lang="less">
 @import './icon.less';
+
+svg {
+  width: 18px;
+  height: 18px;
+}
 </style>

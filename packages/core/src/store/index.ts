@@ -35,7 +35,7 @@ export const store = reactive<Store>({
   entry: decodeURIComponent(params.get('params') || 'index.html'),
   files: {},
   activeFile: decodeURIComponent(params.get('activeFile') || ''),
-  showFileBar: params.get('showFileBar') !== 'false',
+  showFileBar: params.get('showFileBar') === 'true',
   showCode: params.get('showCode') !== 'false',
   showPreview: params.get('showPreview') !== 'false',
   showEruda: params.get('showEruda') !== 'false',

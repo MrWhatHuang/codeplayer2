@@ -1,6 +1,11 @@
 <template>
   <div class="codeplayer-monaco-edito-outer">
-    <div class="codeplayer-monaco-editor" ref="containerRef"></div>
+    <div
+      class="codeplayer-monaco-editor"
+      ref="containerRef"
+      @keydown.ctrl.s.prevent="emitChangeEvent"
+      @keydown.meta.s.prevent="emitChangeEvent"
+    ></div>
     <CopyIcon class="code-copy-icon" />
   </div>
 </template>
@@ -164,14 +169,16 @@ onMounted(async () => {
     },
     { immediate: true }
   );
-
-  // @ts-ignore
-  window.editorInstance = editorInstance;
 });
 
 onBeforeUnmount(() => {
   editor.value?.dispose();
 });
+
+function emitChangeEvent() {
+  console.log('emitChangeEvent');
+  store.files[store.activeFile].code = editor.value?.getValue() || '';
+}
 </script>
 
 <style scoped lang="less">

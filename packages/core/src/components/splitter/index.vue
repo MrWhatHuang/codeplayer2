@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref, watch, onMounted, nextTick, toRaw } from 'vue';
+import { ref, Ref, watch, onMounted, nextTick, toRaw, onBeforeUnmount } from 'vue';
 import { convertToNumber } from '@/utils';
 import { store } from '@/store';
+
+const letDomVisible = ref(true);
+const rightDomVisible = ref(true);
 
 const props = withDefaults(
   defineProps<{
@@ -37,7 +40,13 @@ const draggerDOM = ref<HTMLDivElement>() as Ref<HTMLDivElement>;
 onMounted(() => {
   nextTick(() => {
     changeStyle();
+
+    window.addEventListener('resize', changeStyle);
   });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', changeStyle);
 });
 
 // 获取 container 总宽(高)度
@@ -119,8 +128,10 @@ const changeStyle = () => {
         : 'none';
     leftDOM.value.style.borderBottom = 'none';
   }
-  leftDOM.value.style.display = props.showLeft ? 'block' : 'none';
-  rightDOM.value.style.display = props.showRight ? 'block' : 'none';
+  // leftDOM.value.style.display = props.showLeft ? 'block' : 'none';
+  // rightDOM.value.style.display = props.showRight ? 'block' : 'none';
+  rightDomVisible.value = props.showRight;
+  letDomVisible.value = props.showLeft;
 };
 
 watch(
@@ -153,24 +164,48 @@ watch(
     @mouseup="dragEnd"
     @mouseleave="dragEnd"
   >
-    <div class="splitter-left" ref="leftDOM">
-      <slot name="left" />
-      <div
-        ref="draggerDOM"
-        :class="`${props.vertical ? 'vertical-dragger' : 'dragger'}`"
-        @mousedown="dragStart"
-      />
-      <div
-        class="splitter-mask"
-        :class="{ 'splitter-mask-hidden': !showMask }"
-      />
-    </div>
-    <div class="splitter-right" ref="rightDOM">
-      <slot name="right" />
-      <div
-        class="splitter-mask"
-        :class="{ 'splitter-mask-hidden': !showMask }"
-      />
-    </div>
+    <transition name="slide">
+      <div v-show="letDomVisible" class="splitter-left" ref="leftDOM">
+        <slot name="left" />
+        <div
+          ref="draggerDOM"
+          :class="`${props.vertical ? 'vertical-dragger' : 'dragger'}`"
+          @mousedown="dragStart"
+        />
+        <div
+          class="splitter-mask"
+          :class="{ 'splitter-mask-hidden': !showMask }"
+        />
+      </div>
+    </transition>
+    <transition name="slide-right">
+      <div v-show="rightDomVisible" class="splitter-right" ref="rightDOM">
+        <slot name="right" />
+        <div
+          class="splitter-mask"
+          :class="{ 'splitter-mask-hidden': !showMask }"
+        />
+      </div>
+    </transition>
   </div>
 </template>
+
+<style scoped lang="less">
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease;
+}
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.5s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-1000px);
+}
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(1000px);
+}
+</style>

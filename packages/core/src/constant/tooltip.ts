@@ -16,4 +16,5 @@ export const TooltipText = {
   Docs: '查看 codeplayer 文档',
   Github: '在 github 上查看 codeplayer',
   LightDark: '切换主题色',
+  Pane: '切换布局',
 };

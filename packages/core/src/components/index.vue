@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { watch, computed, ref, onMounted } from 'vue';
+import { watch, computed, ref } from 'vue';
 import { store } from '@/store';
 import { atou } from '@/utils';
 import { getTemplate, File } from '@/compiler';
 import { CodePlayerOptions } from '@/type';
 import Toolbar from './toolbar/index.vue';
 import Splitter from './splitter/index.vue';
-import FileBar from './file-bar/index.vue';
+import FileBar from './fileBar/index.vue';
 import CodeEditor from './monaco-editor/index.vue';
 import Preview from './preview/index.vue';
 import Loading from './loading/index.vue';
@@ -95,30 +95,21 @@ watch(
     <Toolbar />
     <div class="main-content main-content-top">
       <Splitter
-        min="140px"
-        max="300px"
-        initSplit="160px"
-        :showLeft="store.showFileBar"
+        class="main-splitter"
+        min="0%"
+        max="100%"
+        :showLeft="store.reverse ? store.showPreview : store.showCode"
+        :showRight="store.reverse ? store.showCode : store.showPreview"
       >
-        <template #left>
-          <FileBar />
+        <template v-slot:[CodeSlotName]>
+          <div class="code-file-container">
+            <FileBar />
+            <CodeEditor />
+          </div>
         </template>
-        <template #right>
-          <Splitter
-            class="main-splitter"
-            min="0%"
-            max="100%"
-            :showLeft="store.reverse ? store.showPreview : store.showCode"
-            :showRight="store.reverse ? store.showCode : store.showPreview"
-          >
-            <template v-slot:[CodeSlotName]>
-              <CodeEditor />
-            </template>
-            <template v-slot:[PreviewSlotName]>
-              <Preview />
-              <Loading v-if="!loaded" />
-            </template>
-          </Splitter>
+        <template v-slot:[PreviewSlotName]>
+          <Preview />
+          <Loading v-if="!loaded" />
         </template>
       </Splitter>
     </div>
@@ -128,7 +119,14 @@ watch(
 <style lang="less">
 @import './index.less';
 
+.code-file-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .codeplayer-container {
   color: var(--codeplayer-main-color);
+  overflow: hidden;
 }
 </style>

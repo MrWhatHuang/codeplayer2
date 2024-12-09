@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { store } from '@/store';
-import SettingIcon from './icons/setting.vue';
 import RefreshIcon from './icons/refresh.vue';
 import ShareIcon from './icons/share.vue';
 import GithubIcon from './icons/git.vue';
 import AutoSaveIcon from './icons/autoSave.vue';
 import LightDarkIcon from './icons/lightDark.vue';
+import PaneIcon from './icons/pane.vue';
 const showDidiver = computed(() => {
   if (
     store.excludeTools.includes('docs') &&
@@ -27,13 +27,14 @@ const showDidiver = computed(() => {
 <template>
   <div class="codeplayer-toolbar" :class="`codeplayer-toolbar-top`">
     <div class="toolbar-left">
-      <SettingIcon />
+      <h3 style="margin-left: 10px;">Playground(演练场)</h3>
     </div>
     <div class="toolbar-right">
       <AutoSaveIcon />
+      <div class="vertical-divider" v-if="showDidiver"></div>
+      <PaneIcon />
       <LightDarkIcon />
       <GithubIcon v-if="store.github" />
-      <div class="vertical-divider" v-if="showDidiver"></div>
       <RefreshIcon />
       <ShareIcon />
     </div>
@@ -42,8 +43,8 @@ const showDidiver = computed(() => {
 
 <style scoped lang="less">
 .codeplayer-toolbar {
-  height: 36px;
-  min-height: 36px;
+  height: 50px;
+  min-height: 50px;
   box-sizing: border-box;
   padding: 0 4px;
   display: flex;
