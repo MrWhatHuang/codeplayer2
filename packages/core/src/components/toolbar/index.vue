@@ -27,7 +27,7 @@ const showDidiver = computed(() => {
 <template>
   <div class="codeplayer-toolbar" :class="`codeplayer-toolbar-top`">
     <div class="toolbar-left">
-      <h3 style="margin-left: 10px;">Playground(演练场)</h3>
+      <div class="toolbar-title">Playground 演练场</div>
     </div>
     <div class="toolbar-right">
       <AutoSaveIcon />
@@ -56,6 +56,13 @@ const showDidiver = computed(() => {
   .toolbar-left {
     display: flex;
     align-items: center;
+    padding-left: 10px;
+    .toolbar-title {
+      font-size: 18px;
+      font-weight: 500;
+      font-family: @font-family;
+      color: var(--codeplayer-text-secondary);
+    }
   }
   .toolbar-right {
     display: flex;

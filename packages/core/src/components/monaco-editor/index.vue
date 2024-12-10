@@ -3,8 +3,6 @@
     <div
       class="codeplayer-monaco-editor"
       ref="containerRef"
-      @keydown.ctrl.s.prevent="emitChangeEvent"
-      @keydown.meta.s.prevent="emitChangeEvent"
     ></div>
     <CopyIcon class="code-copy-icon" />
   </div>
@@ -23,6 +21,7 @@ import {
 import * as monaco from 'monaco-editor';
 import { initMonaco } from './env';
 import { getOrCreateModel } from './utils';
+import { debounce } from '@/utils';
 import { loadGrammars, loadTheme } from 'monaco-volar';
 import { store } from '@/store';
 import { getFileLanguage, getFileExtraName } from '@/compiler';
@@ -73,28 +72,6 @@ onMounted(async () => {
   });
   editor.value = editorInstance;
 
-  // Support for semantic highlighting
-  const t = (editorInstance as any)._themeService._theme;
-  t.getTokenStyleMetadata = (
-    type: string,
-    modifiers: string[],
-    _language: string
-  ) => {
-    const _readonly = modifiers.includes('readonly');
-    switch (type) {
-      case 'function':
-      case 'method':
-        return { foreground: 12 };
-      case 'class':
-        return { foreground: 11 };
-      case 'variable':
-      case 'property':
-        return { foreground: _readonly ? 21 : 9 };
-      default:
-        return { foreground: 0 };
-    }
-  };
-
   watch(
     () => store.activeFile,
     async (_, oldFilename) => {
@@ -137,14 +114,14 @@ onMounted(async () => {
   await loadGrammars(monaco as any, editorInstance as any);
 
   editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-    // ignore save event
+    emitChangeEvent();
   });
 
-  editorInstance.onDidChangeModelContent(() => {
+  editorInstance.onDidChangeModelContent(debounce(() => {
     if (store.autoSave) {
       store.files[store.activeFile].code = editorInstance.getValue();
     }
-  });
+  }, 1000 * 1.5));
 
   store.reloadLanguageTools();
 
@@ -176,7 +153,6 @@ onBeforeUnmount(() => {
 });
 
 function emitChangeEvent() {
-  console.log('emitChangeEvent');
   store.files[store.activeFile].code = editor.value?.getValue() || '';
 }
 </script>
